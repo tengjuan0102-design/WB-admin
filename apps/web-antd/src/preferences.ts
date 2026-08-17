@@ -59,6 +59,7 @@ export const overridesPreferences = defineOverridesPreferences({
     logoutButtonPosition: 'user-dropdown',
     notification: false,
     refresh: false,
+    sidebarToggle: false,
     themeToggle: false,
     timezone: false,
   },

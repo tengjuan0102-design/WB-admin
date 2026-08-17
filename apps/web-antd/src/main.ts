@@ -59,6 +59,7 @@ async function initApplication() {
       logoutButtonPosition: 'user-dropdown',
       notification: false,
       refresh: false,
+      sidebarToggle: false,
       themeToggle: false,
       timezone: false,
     },
