@@ -323,7 +323,11 @@ const headerSlots = computed(() => {
         :fit="preferences.logo.fit"
         :class="logoClass"
         :collapsed="logoCollapsed"
-        :src="preferences.logo.source"
+        :src="
+          logoCollapsed
+            ? '/images/wanbao-logo-icon.svg'
+            : preferences.logo.source
+        "
         :src-dark="preferences.logo.sourceDark"
         :text="preferences.app.name"
         :show-text="preferences.logo.showText"
