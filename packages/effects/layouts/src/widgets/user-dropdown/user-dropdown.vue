@@ -197,19 +197,6 @@ const showRefreshInDropdown = computed(
     preferences.widget.refreshButtonPosition === 'user-dropdown',
 );
 
-const hasAnyInDropdown = computed(
-  () =>
-    showLockInDropdown.value ||
-    showLogoutInDropdown.value ||
-    showGlobalSearchInDropdown.value ||
-    showThemeToggleInDropdown.value ||
-    showLanguageToggleInDropdown.value ||
-    showTimezoneInDropdown.value ||
-    showFullscreenInDropdown.value ||
-    showNotificationInDropdown.value ||
-    showRefreshInDropdown.value,
-);
-
 const altView = computed(() => (isWindowsOs() ? 'Alt' : '⌥'));
 
 const enableLogoutShortcutKey = computed(() => {
@@ -547,9 +534,7 @@ if (preferences.shortcutKeys.enable) {
             {{ $t('preferences.widget.refresh') }}
           </DropdownMenuItem>
         </template>
-        <DropdownMenuSeparator
-          v-if="hasAnyInDropdown || preferencesButtonPosition.userDropdown"
-        />
+        <DropdownMenuSeparator v-if="preferencesButtonPosition.userDropdown" />
         <DropdownMenuItem
           v-if="preferencesButtonPosition.userDropdown"
           class="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
