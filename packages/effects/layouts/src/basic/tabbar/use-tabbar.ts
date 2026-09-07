@@ -74,6 +74,24 @@ export function useTabbar() {
     tabbarStore.setAffixTabs(affixTabs);
   };
 
+  /** 清理会话中遗留、但当前路由已声明不展示的页签。 */
+  const removeHiddenTabs = async () => {
+    const hiddenTabKeys = tabbarStore.getTabs
+      .filter((tab) => {
+        const resolved = router.resolve(tab.fullPath || tab.path);
+        return (
+          resolved.meta.hideInTab ||
+          resolved.matched.some((item) => item.meta.hideInTab)
+        );
+      })
+      .map((tab) => tab.key as string)
+      .filter(Boolean);
+
+    if (hiddenTabKeys.length > 0) {
+      await tabbarStore._bulkCloseByKeys(hiddenTabKeys);
+    }
+  };
+
   // 点击tab,跳转路由
   const handleClick = (key: string) => {
     const { fullPath, path } = tabbarStore.getTabByKey(key);
@@ -97,8 +115,9 @@ export function useTabbar() {
 
   watch(
     () => accessStore.accessMenus,
-    () => {
+    async () => {
       initAffixTabs();
+      await removeHiddenTabs();
     },
     { immediate: true },
   );

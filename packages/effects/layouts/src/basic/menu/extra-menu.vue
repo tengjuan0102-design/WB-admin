@@ -3,6 +3,7 @@ import type { MenuRecordRaw } from '@vben/types';
 
 import type { MenuProps } from '@vben-core/menu-ui';
 
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Menu } from '@vben-core/menu-ui';
@@ -14,9 +15,23 @@ interface Props extends MenuProps {
   menus?: MenuRecordRaw[];
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   accordion: true,
   menus: () => [],
+});
+
+const defaultOpeneds = computed(() => {
+  const paths: string[] = [];
+  const collect = (items: MenuRecordRaw[]) => {
+    for (const item of items) {
+      if (item.children?.length) {
+        paths.push(item.path);
+        collect(item.children);
+      }
+    }
+  };
+  collect(props.menus);
+  return paths;
 });
 
 const route = useRoute();
@@ -29,9 +44,11 @@ async function handleSelect(key: string) {
 
 <template>
   <Menu
+    :key="defaultOpeneds.join('|')"
     :accordion="accordion"
     :collapse="collapse"
     :default-active="route.meta?.activePath || route.path"
+    :default-openeds="defaultOpeneds"
     :menus="menus"
     :rounded="rounded"
     :theme="theme"

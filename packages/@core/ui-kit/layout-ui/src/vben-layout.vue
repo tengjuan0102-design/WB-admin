@@ -17,7 +17,7 @@ import {
   ELEMENT_ID_MAIN_CONTENT,
 } from '@vben-core/shared/constants';
 
-import { useEventListener, useScroll } from '@vueuse/core';
+import { useEventListener, useResizeObserver, useScroll } from '@vueuse/core';
 
 import {
   LayoutContent,
@@ -36,6 +36,8 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<Props>(), {
+  breadcrumbEnable: false,
+  breadcrumbHeight: 40,
   contentCompact: 'wide',
   contentCompactWidth: 1200,
   contentPadding: 0,
@@ -57,6 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   sidebarCollapseShowTitle: false,
   sidebarExtraCollapsedWidth: 60,
   sidebarFixedButton: true,
+  sidebarGutterWidth: 0,
   sidebarHidden: false,
   sidebarMixedWidth: 80,
   sidebarTheme: 'dark',
@@ -95,7 +98,15 @@ const sidebarExpandOnHovering = ref(false);
 const headerIsHidden = ref(false);
 const mainRef = ref<HTMLElement | null>(null);
 const contentRef = ref<HTMLElement | null>(null);
+const contentScrollbarWidth = ref(0);
 let lastMouseY: null | number = null;
+
+useResizeObserver(contentRef, () => {
+  const element = contentRef.value;
+  contentScrollbarWidth.value = element
+    ? Math.max(0, element.offsetWidth - element.clientWidth)
+    : 0;
+});
 
 const {
   arrivedState,
@@ -150,9 +161,7 @@ const getSideCollapseWidth = computed(() => {
     sideCollapseWidth,
   } = props;
 
-  return sidebarCollapseShowTitle ||
-    isSidebarMixedNav.value ||
-    isHeaderMixedNav.value
+  return sidebarCollapseShowTitle || isSidebarMixedNav.value
     ? sidebarExtraCollapsedWidth
     : sideCollapseWidth;
 });
@@ -193,7 +202,7 @@ const getSidebarWidth = computed(() => {
     return width;
   }
 
-  if ((isHeaderMixedNav.value || isSidebarMixedNav.value) && !isMobile) {
+  if (isSidebarMixedNav.value && !isMobile) {
     width = sidebarMixedWidth;
   } else if (sidebarCollapse.value) {
     width = isMobile ? 0 : getSideCollapseWidth.value;
@@ -209,6 +218,10 @@ const getSidebarWidth = computed(() => {
 const sidebarExtraWidth = computed(() => {
   const { sidebarExtraCollapsedWidth, sidebarWidth } = props;
 
+  // 并列导航的收起态隐藏整个右栏；hover 展示时仍使用完整面板宽度。
+  if (isSidebarMixedNav.value) {
+    return sidebarWidth;
+  }
   return sidebarExtraCollapse.value ? sidebarExtraCollapsedWidth : sidebarWidth;
 });
 
@@ -252,8 +265,7 @@ const mainStyle = computed(() => {
   if (
     headerFixed.value &&
     currentLayout.value !== 'header-nav' &&
-    currentLayout.value !== 'mixed-nav' &&
-    currentLayout.value !== 'header-sidebar-nav' &&
+    !isMixedNav.value &&
     showSidebar.value &&
     !props.isMobile
   ) {
@@ -290,37 +302,48 @@ const mainStyle = computed(() => {
   };
 });
 
-// 计算 tabbar 的样式
-const tabbarStyle = computed((): CSSProperties => {
-  let width: string;
-  let marginLeft = 0;
+// 导航占据第一列，页签自然填满主内容的剩余宽度。
+const tabbarGridStyle = computed((): CSSProperties => {
+  let navigationWidth = 0;
 
-  // 如果不是混合导航，tabbar 的宽度为 100%
-  if (!isMixedNav.value || props.sidebarHidden) {
-    width = '100%';
+  // 旺宝双列菜单需要同时避让一级栏与已展开的二级栏。
+  if (isSidebarMixedNav.value && sidebarEnable.value && !props.sidebarHidden) {
+    navigationWidth =
+      getSidebarWidth.value +
+      (sidebarExtraVisible.value && !sidebarExtraCollapse.value
+        ? sidebarExtraWidth.value
+        : 0) +
+      props.sidebarGutterWidth;
+  } else if (!isMixedNav.value || props.sidebarHidden) {
+    navigationWidth = 0;
   } else if (sidebarEnable.value) {
-    // 鼠标在侧边栏上时，且侧边栏展开时的宽度
     const onHoveringWidth = sidebarExpandOnHover.value
       ? props.sidebarWidth
       : getSideCollapseWidth.value;
 
-    // 设置 marginLeft，根据侧边栏是否折叠来决定
-    marginLeft = sidebarCollapse.value
+    navigationWidth = sidebarCollapse.value
       ? getSideCollapseWidth.value
       : onHoveringWidth;
-
-    // 设置 tabbar 的宽度，计算方式为 100% 减去侧边栏的宽度
-    width = `calc(100% - ${sidebarCollapse.value ? getSidebarWidth.value : onHoveringWidth}px)`;
-  } else {
-    // 默认情况下，tabbar 的宽度为 100%
-    width = '100%';
   }
 
   return {
-    marginLeft: `${marginLeft}px`,
-    width,
+    gridTemplateColumns: `${navigationWidth}px minmax(0, 1fr)`,
   };
 });
+
+const tabbarContentStyle = computed(
+  (): CSSProperties => ({
+    paddingLeft:
+      'calc(var(--wb-space-page-x, 24px) + var(--wb-radius-page, 12px))',
+    paddingRight: `calc(var(--wb-space-page-x, 24px) + ${contentScrollbarWidth.value}px)`,
+  }),
+);
+
+const breadcrumbStyle = computed(
+  (): CSSProperties => ({
+    height: `${props.breadcrumbHeight}px`,
+  }),
+);
 
 const layoutScrollStyle = computed((): CSSProperties => {
   const fixed = headerFixed.value;
@@ -426,7 +449,7 @@ const showHeaderToggleButton = computed(() => {
     (props.headerToggleSidebarButton &&
       isSideMode.value &&
       !isSidebarMixedNav.value &&
-      !isMixedNav.value &&
+      (!isMixedNav.value || isHeaderMixedNav.value) &&
       !props.isMobile)
   );
 });
@@ -574,12 +597,11 @@ const layoutStaticHeaderTarget = `#${idLayoutStaticHeader}`;
       :collapse-width="getSideCollapseWidth"
       :dom-visible="!isMobile"
       :extra-width="sidebarExtraWidth"
-      :fixed-extra="sidebarExpandOnHover"
+      :fixed-extra="sidebarExpandOnHover || isSidebarMixedNav"
+      :gutter-width="sidebarGutterWidth"
       :header-height="sidebarHeaderHeight"
-      :extra-title-height="
-        isSidebarMixedNav || isHeaderMixedNav ? sidebarExtraTitleHeight : 0
-      "
-      :is-sidebar-mixed="isSidebarMixedNav || isHeaderMixedNav"
+      :extra-title-height="isSidebarMixedNav ? sidebarExtraTitleHeight : 0"
+      :is-sidebar-mixed="isSidebarMixedNav"
       :margin-top="sidebarMarginTop"
       :mixed-width="sidebarMixedWidth"
       :show="showSidebar"
@@ -594,7 +616,7 @@ const layoutStaticHeaderTarget = `#${idLayoutStaticHeader}`;
         <slot name="logo"></slot>
       </template>
 
-      <template v-if="isSidebarMixedNav || isHeaderMixedNav">
+      <template v-if="isSidebarMixedNav">
         <slot name="mixed-menu"></slot>
       </template>
       <template v-else>
@@ -648,23 +670,35 @@ const layoutStaticHeaderTarget = `#${idLayoutStaticHeader}`;
             <slot name="header"></slot>
           </LayoutHeader>
 
-          <LayoutTabbar
-            v-if="tabbarEnable"
-            :height="tabbarHeight"
-            :style="tabbarStyle"
-          >
-            <slot name="tabbar"></slot>
-          </LayoutTabbar>
+          <div v-if="tabbarEnable" :style="tabbarGridStyle" class="grid w-full">
+            <div
+              :style="tabbarContentStyle"
+              class="col-start-2 min-w-0 bg-background-deep"
+            >
+              <LayoutTabbar :height="tabbarHeight">
+                <slot name="tabbar"></slot>
+              </LayoutTabbar>
+            </div>
+          </div>
         </div>
       </Teleport>
 
       <div
         :id="idLayoutScroll"
         ref="contentRef"
+        :class="{ 'wb-has-tabbar': tabbarEnable }"
         :style="layoutScrollStyle"
         class="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto"
       >
         <div :id="idLayoutStaticHeader" class="contents"></div>
+
+        <div
+          v-if="breadcrumbEnable"
+          :style="breadcrumbStyle"
+          class="vben-breadcrumb-row relative mx-4 mt-4 flex shrink-0 items-center rounded-t-xl bg-background px-5 after:absolute after:right-5 after:bottom-0 after:left-5 after:h-px after:bg-border/50"
+        >
+          <slot name="breadcrumb"></slot>
+        </div>
 
         <LayoutContent
           :id="idMainContent"

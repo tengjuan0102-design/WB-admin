@@ -7,6 +7,16 @@ import type {
 
 interface VbenLayoutProps {
   /**
+   * 面包屑独立导航层是否可见
+   * @default false
+   */
+  breadcrumbEnable?: boolean;
+  /**
+   * 面包屑独立导航层高度
+   * @default 40
+   */
+  breadcrumbHeight?: number;
+  /**
    * 内容区域定宽
    * @default 'wide'
    */
@@ -135,6 +145,8 @@ interface VbenLayoutProps {
    * @default true
    */
   sidebarFixedButton?: boolean;
+  /** 并列侧栏卡片的左侧内边距 */
+  sidebarGutterWidth?: number;
   /**
    * 侧边栏是否隐藏
    * @default false

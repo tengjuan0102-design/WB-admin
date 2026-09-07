@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { Dayjs } from 'dayjs';
 
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { Plus, RotateCw, Search } from '@vben/icons';
 
@@ -21,6 +22,7 @@ import StandardFilterItem from '#/components/standard-list-page/standard-filter-
 
 defineOptions({ name: 'StoreManagement' });
 
+const route = useRoute();
 const RangePicker = DatePicker.RangePicker;
 
 const storeName = ref('');
@@ -29,11 +31,17 @@ const merchantIds = ref<string[]>([]);
 const dateRange = ref<[Dayjs, Dayjs]>();
 
 const merchantOptions = [
-  { label: '旺记餐饮管理有限公司', value: 'merchant-1' },
-  { label: '麦禾烘焙', value: 'merchant-2' },
-  { label: '青川生活超市', value: 'merchant-3' },
-  { label: '南风茶饮', value: 'merchant-4' },
+  { label: '旺记餐饮管理有限公司', value: 'M20260728001' },
+  { label: '麦禾烘焙', value: 'M20260725008' },
+  { label: '青川生活超市', value: 'M20260719016' },
+  { label: '南风茶饮', value: 'M20260712021' },
 ];
+
+const currentMerchantName = computed(() => {
+  if (merchantIds.value.length !== 1) return '';
+  return merchantOptions.find((item) => item.value === merchantIds.value[0])
+    ?.label;
+});
 
 const columns = [
   { key: 'store', title: '门店名称、ID', width: 210 },
@@ -53,7 +61,7 @@ const stores = ref([
     createdAt: '2026-07-28',
     id: 'S20260728001',
     key: '1',
-    merchantId: 'merchant-1',
+    merchantId: 'M20260728001',
     merchantName: '旺记餐饮管理有限公司',
     name: '旺记餐饮·徐汇店',
     status: 'enabled',
@@ -65,7 +73,7 @@ const stores = ref([
     createdAt: '2026-07-25',
     id: 'S20260725008',
     key: '2',
-    merchantId: 'merchant-2',
+    merchantId: 'M20260725008',
     merchantName: '麦禾烘焙',
     name: '麦禾烘焙·静安店',
     status: 'enabled',
@@ -77,7 +85,7 @@ const stores = ref([
     createdAt: '2026-07-19',
     id: 'S20260719016',
     key: '3',
-    merchantId: 'merchant-3',
+    merchantId: 'M20260719016',
     merchantName: '青川生活超市',
     name: '青川生活超市·文三店',
     status: 'disabled',
@@ -97,6 +105,15 @@ const filteredStores = computed(() =>
   }),
 );
 
+watch(
+  () => route.query.merchantId,
+  (merchantId) => {
+    merchantIds.value =
+      typeof merchantId === 'string' && merchantId ? [merchantId] : [];
+  },
+  { immediate: true },
+);
+
 function resetFilters() {
   storeName.value = '';
   status.value = 'all';
@@ -106,7 +123,12 @@ function resetFilters() {
 </script>
 
 <template>
-  <StandardListPage list-title="门店列表" title="门店管理">
+  <StandardListPage
+    list-title="门店列表"
+    :title="
+      currentMerchantName ? `${currentMerchantName} · 门店列表` : '门店列表'
+    "
+  >
     <template #actions>
       <Button
         class="h-10"

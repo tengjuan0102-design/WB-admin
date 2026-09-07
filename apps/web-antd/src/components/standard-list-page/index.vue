@@ -7,8 +7,8 @@ defineProps<{
 </script>
 
 <template>
-  <div class="min-h-full bg-background-deep px-6 pt-4 pb-6">
-    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-6">
+  <div class="wb-page-shell min-h-full bg-background-deep p-4">
+    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-5">
       <div class="mb-5 flex items-center justify-between">
         <h1 class="m-0 text-xl font-semibold text-foreground">
           {{ title }}
@@ -50,9 +50,9 @@ defineProps<{
 
 <style scoped>
 .standard-filter-panel {
-  padding: 20px;
-  background: #f7f8fa;
-  border-radius: 10px;
+  padding: var(--wb-space-panel);
+  background: var(--wb-color-surface-subtle);
+  border-radius: var(--wb-radius-section);
 }
 
 .standard-filter-grid {
@@ -75,10 +75,10 @@ defineProps<{
 
 .standard-list-table :deep(.ant-table-thead > tr > th) {
   font-weight: 600;
-  background: #f7f8fa !important;
+  background: var(--wb-color-surface-subtle) !important;
 }
 
 .standard-list-table :deep(.ant-table-tbody > tr:hover > td) {
-  background: #fafafa !important;
+  background: var(--wb-color-row-hover) !important;
 }
 </style>

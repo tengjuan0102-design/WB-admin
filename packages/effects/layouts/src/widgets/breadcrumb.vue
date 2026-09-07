@@ -27,23 +27,37 @@ const route = useRoute();
 const router = useRouter();
 
 const breadcrumbs = computed((): IBreadcrumb[] => {
+  const customBreadcrumbs = route.meta.breadcrumb;
   const matched = route.matched;
 
-  const resultBreadcrumb: IBreadcrumb[] = [];
+  const resultBreadcrumb: IBreadcrumb[] = Array.isArray(customBreadcrumbs)
+    ? customBreadcrumbs.map(({ icon, path, title }) => ({
+        icon,
+        path,
+        title: $t(title),
+      }))
+    : [];
 
-  for (const match of matched) {
-    const { meta, path } = match;
-    const { hideChildrenInMenu, hideInBreadcrumb, icon, name, title } =
-      meta || {};
-    if (hideInBreadcrumb || hideChildrenInMenu || !path) {
-      continue;
+  if (!Array.isArray(customBreadcrumbs)) {
+    for (const match of matched) {
+      const { meta, path } = match;
+      const { hideChildrenInMenu, hideInBreadcrumb, icon, name, title } =
+        meta || {};
+      if (hideInBreadcrumb || hideChildrenInMenu || !path) {
+        continue;
+      }
+
+      const breadcrumbTitle = title ? $t((title || name) as string) : '';
+      if (!breadcrumbTitle.trim()) {
+        continue;
+      }
+
+      resultBreadcrumb.push({
+        icon,
+        path: path || route.path,
+        title: breadcrumbTitle,
+      });
     }
-
-    resultBreadcrumb.push({
-      icon,
-      path: path || route.path,
-      title: title ? $t((title || name) as string) : '',
-    });
   }
   if (props.showHome) {
     resultBreadcrumb.unshift({
@@ -65,10 +79,10 @@ function handleSelect(path: string) {
 </script>
 <template>
   <VbenBreadcrumbView
+    v-if="breadcrumbs.length > 0"
     :breadcrumbs="breadcrumbs"
     :show-icon="showIcon"
     :style-type="type"
-    class="ml-2"
     @select="handleSelect"
   />
 </template>

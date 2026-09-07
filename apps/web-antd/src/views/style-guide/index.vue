@@ -23,7 +23,7 @@ import {
   Textarea,
 } from 'ant-design-vue';
 
-defineOptions({ name: 'StyleGuide' });
+defineOptions({ name: 'BasicComponents' });
 
 const TrashIcon = createIconifyIcon('lucide:trash-2');
 
@@ -61,13 +61,13 @@ const dataSource = [
 </script>
 
 <template>
-  <div class="min-h-full bg-background-deep px-6 pt-4 pb-6">
-    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-6">
+  <div class="wb-page-shell min-h-full bg-background-deep p-4">
+    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-5">
       <div class="mb-6 flex items-center justify-between">
         <div>
-          <h1 class="m-0 text-xl font-semibold text-foreground">视觉基准</h1>
+          <h1 class="m-0 text-xl font-semibold text-foreground">基础组件</h1>
           <p class="mt-2 mb-0 text-sm text-muted-foreground">
-            旺宝后台通用组件与页面样式基准
+            旺宝后台常用基础控件及其默认状态
           </p>
         </div>
         <Tag color="red">Wangbao UI</Tag>
@@ -225,9 +225,9 @@ const dataSource = [
 
 .guide-section {
   min-width: 0;
-  padding: 20px;
-  background: #f7f8fa;
-  border-radius: 10px;
+  padding: var(--wb-space-panel);
+  background: var(--wb-color-surface-subtle);
+  border-radius: var(--wb-radius-section);
 }
 
 .guide-section-wide {
@@ -253,7 +253,7 @@ const dataSource = [
 
 :deep(.ant-table-thead > tr > th) {
   font-weight: 600;
-  background: #f7f8fa !important;
+  background: var(--wb-color-surface-subtle) !important;
 }
 
 @media (max-width: 1023px) {

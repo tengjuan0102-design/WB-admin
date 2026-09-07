@@ -19,52 +19,13 @@ async function initApplication() {
     namespace,
     overrides: overridesPreferences,
   });
+  // 品牌色优先，覆盖历史上由颜色选择器保存的个性化主题色。
   updatePreferences({
-    app: {
-      accessMode: 'frontend',
-      authPageLayout: 'panel-center',
-      defaultHomePath: '/home',
-      preferencesButtonPosition: 'none',
-    },
-    breadcrumb: {
-      enable: false,
-    },
-    header: {
-      height: 64,
-    },
-    logo: {
-      fit: 'contain',
-      fullLogoHeight: 30,
-      logoMode: 'full',
-      showText: false,
-      source: '/images/wanbao-logo.svg',
-      sourceDark: '/images/wanbao-logo.svg',
-    },
-    sidebar: {
-      fixedButton: false,
-      width: 200,
-    },
     theme: {
       colorPrimary: 'hsl(359 85% 60%)',
-      mode: 'light',
-    },
-    tabbar: {
-      enable: false,
-    },
-    widget: {
-      fullscreen: false,
-      globalSearch: false,
-      languageToggle: false,
-      lockScreen: false,
-      logoutButtonPosition: 'user-dropdown',
-      notification: false,
-      refresh: false,
-      sidebarToggle: false,
-      themeToggle: false,
-      timezone: false,
+      semiDarkSidebarSub: false,
     },
   });
-
   // 启动应用并挂载
   // vue应用主要逻辑及视图
   const { bootstrap } = await import('./bootstrap');

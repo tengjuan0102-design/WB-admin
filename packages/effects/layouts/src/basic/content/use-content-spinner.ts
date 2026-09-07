@@ -7,7 +7,7 @@ function useContentSpinner() {
   const spinning = ref(false);
   const startTime = ref(0);
   const router = useRouter();
-  const minShowTime = 500; // 最小显示时间
+  const minShowTime = 180; // 避免快速切页时产生长时间遮挡
   const enableLoading = computed(() => preferences.transition.loading);
 
   // 结束加载动画

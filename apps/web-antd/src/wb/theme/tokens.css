@@ -1,0 +1,83 @@
+:root {
+  /* 全局透明度阶梯：组件只引用语义层级，不直接填写临时数值。 */
+  --wb-opacity-text-strong: 1;
+  --wb-opacity-text-primary: 0.9;
+  --wb-opacity-text-secondary: 0.8;
+  --wb-opacity-text-muted: 0.6;
+  --wb-opacity-text-disabled: 0.4;
+  --wb-opacity-text-subtle: 0.2;
+  --wb-opacity-state-hover: 0.04;
+  --wb-opacity-state-active: 0.08;
+
+  /* 旺宝品牌色是全局主题的颜色源头。 */
+  --wb-color-primary: hsl(359deg 85% 60%);
+
+  /* 全局语义文字色：跨项目复用时保持层级不变。 */
+  --wb-color-text-strong: hsl(
+    var(--foreground) / var(--wb-opacity-text-strong)
+  );
+  --wb-color-text-primary: hsl(
+    var(--foreground) / var(--wb-opacity-text-primary)
+  );
+  --wb-color-text-secondary: hsl(
+    var(--foreground) / var(--wb-opacity-text-secondary)
+  );
+  --wb-color-text-muted: hsl(
+    var(--foreground) / var(--wb-opacity-text-muted)
+  );
+  --wb-color-text-disabled: hsl(
+    var(--foreground) / var(--wb-opacity-text-disabled)
+  );
+  --wb-color-text-subtle: hsl(
+    var(--foreground) / var(--wb-opacity-text-subtle)
+  );
+  --wb-color-surface-subtle: #f7f8fa;
+  --wb-color-surface-muted: #f5f6f8;
+  --wb-color-row-hover: #fafafa;
+  --wb-color-header: #fff;
+  --wb-color-header-border: #eef0f3;
+  --wb-color-sidebar-rail: #f3f6fc;
+  --wb-color-sidebar-panel: #fff;
+  --wb-color-nav-text: var(--wb-color-text-secondary);
+  --wb-color-nav-text-strong: var(--wb-color-text-strong);
+  --wb-color-nav-submenu-text: var(--wb-color-text-primary);
+  --wb-color-nav-text-hover: var(--wb-color-primary);
+  --wb-color-nav-text-active: var(--wb-color-primary);
+  --wb-color-nav-bg-hover: hsl(
+    var(--primary) / var(--wb-opacity-state-hover)
+  );
+  --wb-color-nav-bg-active: hsl(
+    var(--primary) / var(--wb-opacity-state-active)
+  );
+  --wb-color-tab-inactive: #e9ebef;
+  --wb-color-breadcrumb-muted: var(--wb-color-text-muted);
+  --wb-color-breadcrumb-current: var(--wb-color-text-primary);
+  --wb-color-breadcrumb-separator: var(--wb-color-text-disabled);
+
+  /* 全局排版阶梯。 */
+  --wb-font-size-xs: 12px;
+  --wb-font-size-sm: 14px;
+  --wb-font-size-base: 16px;
+  --wb-font-size-lg: 18px;
+  --wb-font-size-xl: 20px;
+  --wb-font-weight-regular: 400;
+  --wb-font-weight-medium: 500;
+  --wb-font-weight-semibold: 600;
+  --wb-line-height-tight: 1.4;
+  --wb-line-height-normal: 1.5;
+  --wb-line-height-relaxed: 1.6;
+  --wb-radius-section: 10px;
+  --wb-radius-page: 12px;
+  --wb-space-page-x: 16px;
+  --wb-space-page-top: 16px;
+  --wb-space-page-bottom: 16px;
+  --wb-space-panel: 20px;
+  --wb-space-content: 20px;
+  --wb-control-height: 40px;
+  --wb-layout-header-height: 64px;
+  --wb-layout-breadcrumb-height: 40px;
+  --wb-layout-sidebar-width: 200px;
+  --wb-layout-tabbar-item-height: 36px;
+  --wb-layout-tabbar-padding-top: 16px;
+  --wb-layout-tabbar-height: 52px;
+}

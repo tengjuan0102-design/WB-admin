@@ -64,7 +64,6 @@ const {
   globalLockScreenShortcutKey,
   globalLogoutShortcutKey,
   globalSearchShortcutKey,
-  preferencesButtonPosition,
 } = usePreferences();
 const slots = useSlots();
 const { refresh } = useRefresh();
@@ -75,9 +74,7 @@ const showLockInHeader = computed(
     preferences.widget.lockScreenButtonPosition === 'header',
 );
 
-const showLogoutInHeader = computed(
-  () => preferences.widget.logoutButtonPosition === 'header',
-);
+const showLogoutInHeader = computed(() => false);
 
 const enableLockScreenShortcutKey = computed(() => {
   return showLockInHeader.value && globalLockScreenShortcutKey.value;
@@ -154,53 +151,39 @@ const rightSlots = computed(() => {
       slotName: 'global-search',
     },
     preferences: {
-      visible: preferencesButtonPosition.value.header,
+      visible: preferences.app.enablePreferences,
       slotName: 'preferences',
     },
     themeToggle: {
-      visible:
-        preferences.widget.themeToggle &&
-        preferences.widget.themeToggleButtonPosition === 'header',
+      visible: false,
       slotName: 'theme-toggle',
     },
     languageToggle: {
-      visible:
-        preferences.widget.languageToggle &&
-        preferences.widget.languageToggleButtonPosition === 'header',
+      visible: false,
       slotName: 'language-toggle',
     },
     timezone: {
-      visible:
-        preferences.widget.timezone &&
-        preferences.widget.timezoneButtonPosition === 'header',
+      visible: false,
       slotName: 'timezone',
     },
     fullscreen: {
-      visible:
-        preferences.widget.fullscreen &&
-        preferences.widget.fullscreenButtonPosition === 'header',
+      visible: false,
       slotName: 'fullscreen',
     },
     refresh: {
-      visible:
-        preferences.widget.refresh &&
-        preferences.widget.refreshButtonPosition === 'header',
+      visible: false,
       slotName: 'refresh',
     },
     notification: {
-      visible:
-        preferences.widget.notification &&
-        preferences.widget.notificationButtonPosition === 'header',
+      visible: true,
       slotName: 'notification',
     },
     lockScreenBtn: {
-      visible:
-        preferences.widget.lockScreen &&
-        preferences.widget.lockScreenButtonPosition === 'header',
+      visible: false,
       slotName: 'lock-screen-btn',
     },
     logoutBtn: {
-      visible: preferences.widget.logoutButtonPosition === 'header',
+      visible: false,
       slotName: 'logout-btn',
     },
   };

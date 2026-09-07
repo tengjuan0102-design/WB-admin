@@ -104,7 +104,7 @@ const pinType = 'text' as const;
         <PinInputSlot
           v-for="(item, index) in codeLength"
           :key="item"
-          class="size-11 rounded-md border text-base font-medium shadow-none"
+          class="size-11 rounded-md border text-base font-medium text-foreground shadow-none"
           :index="index"
         />
       </PinInputGroup>

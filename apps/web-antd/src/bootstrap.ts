@@ -17,6 +17,7 @@ import App from './app.vue';
 import { router } from './router';
 
 import './styles.css';
+import './wb/theme/tokens.css';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器

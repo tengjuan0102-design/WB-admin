@@ -145,15 +145,9 @@ watch(
   },
 );
 
-const showLockInDropdown = computed(
-  () =>
-    preferences.widget.lockScreen &&
-    preferences.widget.lockScreenButtonPosition === 'user-dropdown',
-);
+const showLockInDropdown = computed(() => false);
 
-const showLogoutInDropdown = computed(
-  () => preferences.widget.logoutButtonPosition === 'user-dropdown',
-);
+const showLogoutInDropdown = computed(() => true);
 
 const showGlobalSearchInDropdown = computed(
   () =>
@@ -161,41 +155,17 @@ const showGlobalSearchInDropdown = computed(
     preferences.widget.globalSearchButtonPosition === 'user-dropdown',
 );
 
-const showThemeToggleInDropdown = computed(
-  () =>
-    preferences.widget.themeToggle &&
-    preferences.widget.themeToggleButtonPosition === 'user-dropdown',
-);
+const showThemeToggleInDropdown = computed(() => false);
 
-const showLanguageToggleInDropdown = computed(
-  () =>
-    preferences.widget.languageToggle &&
-    preferences.widget.languageToggleButtonPosition === 'user-dropdown',
-);
+const showLanguageToggleInDropdown = computed(() => false);
 
-const showTimezoneInDropdown = computed(
-  () =>
-    preferences.widget.timezone &&
-    preferences.widget.timezoneButtonPosition === 'user-dropdown',
-);
+const showTimezoneInDropdown = computed(() => false);
 
-const showFullscreenInDropdown = computed(
-  () =>
-    preferences.widget.fullscreen &&
-    preferences.widget.fullscreenButtonPosition === 'user-dropdown',
-);
+const showFullscreenInDropdown = computed(() => false);
 
-const showNotificationInDropdown = computed(
-  () =>
-    preferences.widget.notification &&
-    preferences.widget.notificationButtonPosition === 'user-dropdown',
-);
+const showNotificationInDropdown = computed(() => false);
 
-const showRefreshInDropdown = computed(
-  () =>
-    preferences.widget.refresh &&
-    preferences.widget.refreshButtonPosition === 'user-dropdown',
-);
+const showRefreshInDropdown = computed(() => false);
 
 const altView = computed(() => (isWindowsOs() ? 'Alt' : '⌥'));
 

@@ -34,7 +34,7 @@ const typeWithClass = computed(() => {
     },
     card: {
       content:
-        'h-[calc(100%-6px)] rounded-md ml-2 border border-border  transition-all',
+        'h-full rounded-t-md transition-all [&:not(:first-child)]:ml-1 [&.is-active]:bg-background',
     },
     plain: {
       content:
@@ -89,7 +89,9 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
         :key="tab.key"
         :class="[
           {
-            'is-active bg-primary/15 dark:bg-accent': tab.key === active,
+            'is-active': tab.key === active,
+            'bg-primary/15 dark:bg-accent':
+              tab.key === active && styleType !== 'card',
             draggable: !tab.affixTab,
             'affix-tab': tab.affixTab,
           },
@@ -127,7 +129,7 @@ function onMouseDown(e: MouseEvent, tab: TabConfig) {
 
             <!-- tab-item-main -->
             <div
-              class="mx-3 mr-4 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pr-3 text-accent-foreground transition-all duration-300 group-[.is-active]:text-primary group-[.is-active]:dark:text-accent-foreground"
+              class="ml-2.5 mr-3 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pr-3 text-accent-foreground transition-all duration-300 group-[.is-active]:text-primary group-[.is-active]:dark:text-accent-foreground"
             >
               <VbenIcon
                 v-if="showIcon"

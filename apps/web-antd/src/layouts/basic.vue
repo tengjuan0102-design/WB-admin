@@ -19,6 +19,7 @@ import { message } from 'ant-design-vue';
 
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import WbPreferencesPanel from '#/wb/components/wb-preferences-panel.vue';
 
 const notifications = ref<NotificationItem[]>([
   {
@@ -199,6 +200,9 @@ watch(
     @clear-preferences-and-logout="handleLogout"
     @logout="handleLogout"
   >
+    <template #preferences>
+      <WbPreferencesPanel />
+    </template>
     <template #user-dropdown>
       <UserDropdown
         :avatar

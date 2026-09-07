@@ -55,6 +55,12 @@ vite.config.ts.*
 # AI
 .agent
 .agents
+!.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/wangbao-admin-scaffold/
+!.agents/skills/wangbao-admin-scaffold/**
 .claude
 .codex
 skills-lock.json

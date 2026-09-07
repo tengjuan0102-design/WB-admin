@@ -26,8 +26,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {});
 
-// @ts-expect-error - unused
-const { contentElement, overlayStyle } = useLayoutContentStyle();
+// @ts-expect-error - template ref usage is not detected by vue-tsc here
+const { contentElement } = useLayoutContentStyle();
 
 const style = computed((): CSSProperties => {
   const {
@@ -56,10 +56,16 @@ const style = computed((): CSSProperties => {
 </script>
 
 <template>
-  <main ref="contentElement" :style="style" class="relative bg-background-deep">
-    <Slot :style="overlayStyle">
-      <slot name="overlay"></slot>
-    </Slot>
-    <slot></slot>
+  <main
+    ref="contentElement"
+    :style="style"
+    class="relative flex flex-col bg-background"
+  >
+    <div class="vben-content-frame relative min-h-0 flex-1">
+      <Slot>
+        <slot name="overlay"></slot>
+      </Slot>
+      <slot></slot>
+    </div>
   </main>
 </template>

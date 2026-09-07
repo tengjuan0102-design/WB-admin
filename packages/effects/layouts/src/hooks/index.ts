@@ -58,9 +58,9 @@ export function useLayoutHook() {
    * 是否使用动画
    */
   const getEnabledTransition = computed(() => {
-    const { transition } = preferences;
-    const transitionName = transition.name;
-    return transitionName && transition.enable;
+    // 旺宝使用固定框架，页面卡片本身不做进出场动画，避免圆角和边距在
+    // 淡出过程中暴露底色；加载反馈统一由内容区遮罩承担。
+    return false;
   });
 
   /**
@@ -70,7 +70,8 @@ export function useLayoutHook() {
   function getTransitionName(_route: RouteLocationNormalizedLoaded) {
     // 如果偏好设置未设置，则不使用动画
     const { tabbar, transition } = preferences;
-    const transitionName = transition.name;
+    // 旺宝页面始终在原位切换，避免旧的横向位移配置造成卡片错位。
+    const transitionName = 'fade';
     if (!transitionName || !transition.enable) {
       return;
     }

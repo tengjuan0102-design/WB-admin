@@ -75,6 +75,7 @@ const defaultPreferences: Preferences = {
     accordion: true,
     split: true,
     styleType: 'rounded',
+    topMenuEnable: true,
   },
   shortcutKeys: {
     enable: true,
@@ -98,6 +99,7 @@ const defaultPreferences: Preferences = {
     fixedButton: true,
     hidden: false,
     mixedWidth: 80,
+    parallel: false,
     width: 224,
   },
   tabbar: {

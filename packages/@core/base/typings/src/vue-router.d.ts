@@ -44,6 +44,14 @@ interface RouteMeta {
     | 'warning'
     | string;
   /**
+   * 自定义业务面包屑。适用于菜单保持扁平，但列表、详情等页面仍需展示来源层级的场景。
+   */
+  breadcrumb?: Array<{
+    icon?: Component | string;
+    path?: string;
+    title: string;
+  }>;
+  /**
    * 路由对应dom是否缓存起来
    */
   domCached?: boolean;

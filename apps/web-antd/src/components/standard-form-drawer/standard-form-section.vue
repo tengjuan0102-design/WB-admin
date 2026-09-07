@@ -11,9 +11,16 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <section :class="first ? '' : 'mt-8'">
-    <div class="mb-5 rounded-md bg-[#f5f6f8] px-3 py-2 text-base font-semibold">
+    <div class="wb-form-section-title mb-5 px-3 py-2 text-base font-semibold">
       {{ title }}
     </div>
     <slot></slot>
   </section>
 </template>
+
+<style scoped>
+.wb-form-section-title {
+  background: var(--wb-color-surface-muted);
+  border-radius: var(--radius);
+}
+</style>

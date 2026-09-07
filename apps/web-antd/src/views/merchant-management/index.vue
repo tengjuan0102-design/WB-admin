@@ -4,7 +4,7 @@ import type { Dayjs } from 'dayjs';
 import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { ImagePlus, Plus, RotateCw, Search } from '@vben/icons';
+import { ImagePlus, Plus } from '@vben/icons';
 
 import {
   Button,
@@ -484,14 +484,8 @@ function openMerchantStores(record: MerchantRecord | Record<string, any>) {
     </template>
 
     <template #filter-actions>
-      <Button class="h-10" @click="resetFilters">
-        <template #icon><RotateCw class="size-4" /></template>
-        重置
-      </Button>
-      <Button class="h-10" type="primary">
-        <template #icon><Search class="size-4" /></template>
-        查询
-      </Button>
+      <Button class="h-10" @click="resetFilters">重置</Button>
+      <Button class="h-10" type="primary">查询</Button>
     </template>
 
     <template #table>

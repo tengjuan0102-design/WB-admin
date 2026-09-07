@@ -1,5 +1,426 @@
-.ant-select-dropdown
-  .ant-select-item-option
-  + .ant-select-item-option {
+.ant-select-dropdown .ant-select-item-option + .ant-select-item-option {
   margin-top: 2px;
+}
+
+/* 固定顶栏使用稳定的白色表面。 */
+#app .ant-app header.light {
+  background-color: var(--wb-color-header) !important;
+  border-bottom-color: var(--wb-color-header-border) !important;
+}
+
+/* 顶栏横版 Logo 在其导航区域内左对齐。 */
+#app .wb-logo-left {
+  justify-content: flex-start !important;
+}
+
+#app .wb-logo-left img {
+  object-position: left center;
+}
+
+/* 半深色导航只改变导航区域，内容区继续使用浅色主题。 */
+#app aside.dark {
+  --wb-color-sidebar-panel: #1f2a44;
+  --wb-color-sidebar-rail: #19233b;
+  --wb-color-nav-text: rgb(255 255 255 / 68%);
+  --wb-color-nav-text-strong: rgb(255 255 255 / 92%);
+  --wb-color-nav-submenu-text: rgb(255 255 255 / 72%);
+  --wb-color-nav-text-hover: #fff;
+  --wb-color-nav-text-active: #fff;
+  --wb-color-nav-bg-hover: rgb(255 255 255 / 7%);
+  --wb-color-nav-bg-active: var(--wb-color-primary);
+  --wb-color-header-border: rgb(255 255 255 / 8%);
+
+  background-color: var(--wb-color-sidebar-panel) !important;
+}
+
+#app aside.dark .vben-menu-item.is-active {
+  color: var(--wb-color-nav-text-active) !important;
+  background-color: var(--wb-color-nav-bg-active) !important;
+}
+
+#app aside.dark .vben-menu-item.is-active .vben-menu-item__content,
+#app aside.dark .vben-menu-item.is-active .vben-menu__icon {
+  color: var(--wb-color-nav-text-active) !important;
+}
+
+#app aside.dark .vben-menu-item:not(.is-active):hover,
+#app aside.dark .vben-sub-menu-content:hover {
+  background-color: var(--wb-color-nav-bg-hover) !important;
+}
+
+/* 并列式导航采用深色一级栏 + 浅色后续层级的组合。 */
+#app aside.dark .wb-sidebar-parallel-panel.light {
+  --wb-color-sidebar-panel: #fff;
+  --wb-color-nav-text: var(--wb-color-text-secondary);
+  --wb-color-nav-text-strong: var(--wb-color-text-strong);
+  --wb-color-nav-submenu-text: var(--wb-color-text-primary);
+  --wb-color-nav-text-hover: var(--wb-color-primary);
+  --wb-color-nav-text-active: var(--wb-color-primary);
+  --wb-color-nav-bg-hover: transparent;
+  --wb-color-nav-bg-active: transparent;
+  --wb-color-header-border: #eef0f3;
+}
+
+/* 一级导航普通态保持中性，hover 与选中态使用浅主题色反馈。 */
+#app header .wb-header-primary-menu > .vben-menu-item {
+  color: var(--wb-color-nav-text-strong) !important;
+}
+
+#app header .wb-header-primary-menu > .vben-menu-item.is-active {
+  font-weight: var(--wb-font-weight-semibold);
+  color: var(--wb-color-nav-text-active) !important;
+  background-color: var(--wb-color-nav-bg-active) !important;
+}
+
+#app
+  header
+  .wb-header-primary-menu
+  > .vben-menu-item.is-active
+  .vben-menu__icon,
+#app
+  header
+  .wb-header-primary-menu
+  > .vben-menu-item.is-active
+  .vben-menu-item__content {
+  font-weight: var(--wb-font-weight-semibold);
+  color: var(--wb-color-nav-text-active) !important;
+}
+
+#app header .wb-header-primary-menu > .vben-menu-item:not(.is-active):hover {
+  color: var(--wb-color-nav-text-hover) !important;
+  background-color: var(--wb-color-nav-bg-hover) !important;
+}
+
+#app
+  header
+  .wb-header-primary-menu
+  > .vben-menu-item:not(.is-active):hover
+  .vben-menu__icon,
+#app
+  header
+  .wb-header-primary-menu
+  > .vben-menu-item:not(.is-active):hover
+  .vben-menu-item__content {
+  color: var(--wb-color-nav-text-hover) !important;
+}
+
+/* 并列式导航：两列合并成一张带 16px 外边距的侧栏卡片。 */
+#app aside:has(> .wb-sidebar-parallel-rail) {
+  background-color: transparent !important;
+}
+
+#app .wb-sidebar-parallel-rail {
+  width: 128px !important;
+  height: calc(100% - 32px) !important;
+  margin: 16px 0;
+  overflow: hidden;
+  background: var(--wb-color-sidebar-panel) !important;
+  border-right-color: transparent !important;
+  border-radius: var(--wb-radius-page, 12px) 0 0 var(--wb-radius-page, 12px);
+}
+
+#app .wb-sidebar-parallel-rail--single {
+  border-radius: var(--wb-radius-page, 12px);
+}
+
+#app .wb-sidebar-parallel-rail--collapsed {
+  width: 64px !important;
+}
+
+#app
+  .wb-sidebar-parallel-rail.wb-sidebar-parallel-rail--collapsed
+  .vben-normal-menu__item {
+  gap: 0;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 10px;
+  margin: 4px auto;
+}
+
+#app
+  .wb-sidebar-parallel-rail.wb-sidebar-parallel-rail--collapsed
+  .vben-normal-menu__name {
+  display: none;
+}
+
+#app .wb-sidebar-parallel-rail .vben-normal-menu__item {
+  flex-direction: row;
+  gap: 8px;
+  justify-content: flex-start;
+  min-height: 40px;
+  padding: 8px 10px;
+  margin: 4px 8px;
+}
+
+#app .wb-sidebar-parallel-rail .vben-normal-menu__item:not(.is-active):hover {
+  color: var(--wb-color-nav-text-hover) !important;
+  background-color: var(--wb-color-nav-bg-hover) !important;
+}
+
+#app
+  .wb-sidebar-parallel-rail
+  .vben-normal-menu__item:not(.is-active):hover
+  .vben-normal-menu__name,
+#app
+  .wb-sidebar-parallel-rail
+  .vben-normal-menu__item:not(.is-active):hover
+  .vben-normal-menu__icon {
+  color: var(--wb-color-nav-text-hover) !important;
+}
+
+#app .wb-sidebar-parallel-rail .vben-normal-menu__item.is-active {
+  color: var(--wb-color-nav-text-active) !important;
+  background-color: var(--wb-color-nav-bg-active) !important;
+}
+
+#app
+  .wb-sidebar-parallel-rail
+  .vben-normal-menu__item.is-active
+  .vben-normal-menu__name,
+#app
+  .wb-sidebar-parallel-rail
+  .vben-normal-menu__item.is-active
+  .vben-normal-menu__icon {
+  font-weight: var(--wb-font-weight-semibold);
+  color: var(--wb-color-nav-text-active) !important;
+}
+
+#app .wb-sidebar-parallel-rail .vben-normal-menu__icon {
+  flex: 0 0 auto;
+  font-size: 18px;
+  color: var(--wb-color-nav-text);
+}
+
+#app .wb-sidebar-parallel-rail .vben-normal-menu__name {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  margin-top: 0;
+  font-size: var(--wb-font-size-sm);
+  font-weight: var(--wb-font-weight-medium);
+  color: var(--wb-color-nav-text-strong);
+  text-align: left;
+}
+
+#app .wb-sidebar-parallel-panel {
+  position: absolute !important;
+  top: 16px !important;
+  height: calc(100% - 32px) !important;
+  overflow: hidden;
+  background-color: var(--wb-color-sidebar-panel) !important;
+  border-right-color: transparent !important;
+  border-left: 1px solid var(--wb-color-header-border) !important;
+  border-radius: 0 var(--wb-radius-page, 12px) var(--wb-radius-page, 12px) 0;
+  box-shadow: none !important;
+}
+
+/* 收起态 hover 展开的右栏作为浮层，与页面内容形成轻微层级。 */
+#app .wb-sidebar-parallel-panel.wb-sidebar-parallel-panel--floating {
+  box-shadow: 8px 0 20px hsl(var(--foreground) / 8%) !important;
+}
+
+/* 并列式右栏承载后续层级，不重复展示业务图标。 */
+#app .wb-sidebar-parallel-panel .vben-menu__icon {
+  display: none;
+}
+
+/* 无顶部菜单时，右栏根节点即二级分组，用字重而非图标强调。 */
+#app
+  .wb-parallel-secondary-root
+  > .vben-sub-menu
+  > .vben-sub-menu-content
+  > .vben-sub-menu-content__title,
+#app .wb-parallel-secondary-root > .vben-menu-item > .vben-menu-item__content {
+  font-weight: var(--wb-font-weight-medium);
+  color: var(--wb-color-nav-submenu-text);
+}
+
+#app
+  .wb-sidebar-parallel-panel
+  .vben-menu-item:not(.is-active)
+  > .vben-menu-item__content {
+  font-weight: var(--wb-font-weight-regular);
+  color: var(--wb-color-nav-submenu-text);
+}
+
+#app
+  .wb-sidebar-parallel-panel
+  .vben-sub-menu:not(.is-active)
+  > .vben-sub-menu-content
+  > .vben-sub-menu-content__title {
+  color: var(--wb-color-nav-submenu-text);
+}
+
+#app
+  .wb-parallel-secondary-root
+  > .vben-menu
+  > .vben-menu-item:not(.is-active)
+  > .vben-menu-item__content {
+  font-weight: var(--wb-font-weight-medium);
+  color: var(--wb-color-nav-submenu-text);
+}
+
+#app
+  .wb-sidebar-parallel-panel
+  .vben-sub-menu:not(.is-active)
+  > .vben-sub-menu-content
+  > .vben-sub-menu-content__icon-arrow {
+  color: var(--wb-color-nav-submenu-text);
+}
+
+/* 右栏用字重表达分组，所有后续层级共用同一条文字对齐线。 */
+#app .wb-parallel-secondary-root .vben-menu .vben-sub-menu-content,
+#app .wb-parallel-secondary-root .vben-menu .vben-menu-item {
+  padding-left: 12px !important;
+}
+
+#app .wb-parallel-secondary-root .vben-menu .vben-sub-menu-content__title,
+#app .wb-parallel-secondary-root .vben-menu .vben-menu-item__content {
+  transform: none !important;
+}
+
+/* 并列式右栏菜单只用轻微的文字变化提供 hover 反馈。 */
+#app .wb-sidebar-parallel-panel .vben-sub-menu-content__title,
+#app .wb-sidebar-parallel-panel .vben-menu-item__content {
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+#app
+  .wb-sidebar-parallel-panel
+  .vben-sub-menu:not(.is-active)
+  > .vben-sub-menu-content:hover
+  > .vben-sub-menu-content__title,
+#app
+  .wb-sidebar-parallel-panel
+  .vben-menu-item:not(.is-active):hover
+  > .vben-menu-item__content {
+  color: var(--wb-color-nav-text-strong) !important;
+  transform: translateX(1px) !important;
+}
+
+/* 折叠式菜单只在第一层展示业务图标，后续层级由缩进表达。 */
+#app
+  aside
+  .vben-menu
+  .vben-menu
+  > .vben-sub-menu
+  > .vben-sub-menu-content
+  > .vben-menu__icon,
+#app aside .vben-menu .vben-menu > .vben-menu-item > .vben-menu__icon,
+#app
+  aside
+  .vben-menu
+  .vben-menu
+  > .vben-menu-item
+  > .vben-menu-item__content
+  > .vben-menu__icon {
+  display: none;
+}
+
+/* 图标隐藏后仍保留每一级 16px 的文字递进关系。叶子项自身比
+ * 分组标题多 4px 的结构内距，因此分别补偿，确保同级文字同轴。 */
+#app
+  aside
+  .vben-menu
+  .vben-menu
+  > .vben-sub-menu
+  > .vben-sub-menu-content
+  > .vben-sub-menu-content__title {
+  transform: translateX(20px);
+}
+
+#app aside .vben-menu .vben-menu > .vben-menu-item > .vben-menu-item__content {
+  transform: translateX(16px);
+}
+
+/* 单级面包屑隐藏时，同时收起其占用的页面行。 */
+#app .vben-breadcrumb-row:not(:has(.vben-breadcrumb)) {
+  display: none;
+}
+
+/* 多级面包屑作为页面卡片顶部，正文承接其下方圆角。 */
+#app .vben-breadcrumb-row:has(.vben-breadcrumb) + main .rounded-xl:first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#app .vben-breadcrumb-row:has(.vben-breadcrumb) + main .wb-page-shell {
+  padding-top: 0;
+}
+
+/* 固定页签已经承担页面区顶部层级，有页签时不再重复保留 16px。 */
+#app .wb-has-tabbar .vben-breadcrumb-row {
+  margin-top: 0;
+}
+
+#app .vben-breadcrumb-row::after {
+  display: none;
+}
+
+#app .wb-has-tabbar .wb-page-shell {
+  padding-top: 0;
+}
+
+/* 页面卡片与加载状态共用同一个定位容器。 */
+#app main:has(.wb-page-shell) {
+  background-color: var(--background-deep);
+}
+
+#app .vben-content-frame:has(.wb-page-shell) {
+  margin: var(--wb-space-page-x, 16px);
+  border-radius: var(--wb-radius-page, 12px);
+}
+
+#app .wb-has-tabbar .vben-content-frame:has(.wb-page-shell) {
+  margin-top: 0;
+}
+
+/* 外层状态容器负责页面边距，页面本身只提供实际卡片内容。 */
+#app .vben-content-frame:has(.wb-page-shell) .wb-page-shell {
+  display: contents;
+}
+
+#app
+  .vben-breadcrumb-row:has(.vben-breadcrumb)
+  + main
+  .vben-content-frame:has(.wb-page-shell) {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* 旺宝页签使用稳定的浅灰色块，不随主题前景色透明叠加。 */
+#app .tab-item:not(.is-active) {
+  background-color: var(--wb-color-tab-inactive);
+}
+
+/* 面包屑只用中性色的深浅表达层级，不继承品牌链接色。 */
+#app .vben-breadcrumb [data-slot='breadcrumb-link'] {
+  color: var(--wb-color-breadcrumb-muted);
+}
+
+#app .vben-breadcrumb [data-slot='breadcrumb-link']:hover {
+  color: var(--wb-color-breadcrumb-current);
+}
+
+#app .vben-breadcrumb [data-slot='breadcrumb-page'] {
+  color: var(--wb-color-breadcrumb-current);
+}
+
+#app .vben-breadcrumb [data-slot='breadcrumb-separator'] {
+  color: var(--wb-color-breadcrumb-separator);
+}
+
+#app .vben-breadcrumb [data-slot='breadcrumb-separator'] > svg {
+  display: none;
+}
+
+#app .vben-breadcrumb [data-slot='breadcrumb-separator']::before {
+  font-size: var(--wb-font-size-sm);
+  line-height: 1;
+  content: '/';
 }

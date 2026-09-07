@@ -1,0 +1,8 @@
+interface:
+  display_name: "旺宝后台框架生成器"
+  short_description: "根据需求范围、导航结构与品牌主色快速搭建后台初版框架"
+  brand_color: "#F04447"
+  default_prompt: "使用 $wangbao-admin-scaffold，根据我的需求范围、导航结构和主色搭建后台初版框架。"
+
+policy:
+  allow_implicit_invocation: true

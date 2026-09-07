@@ -16,16 +16,13 @@ const style = computed((): CSSProperties => {
   const { height } = props;
   return {
     height: `${height}px`,
+    paddingTop: 'var(--wb-layout-tabbar-padding-top, 8px)',
   };
 });
 </script>
 
 <template>
-  <section
-    :style="style"
-    class="flex w-full border-b border-transparent bg-transparent transition-all"
-    style="background-color: transparent"
-  >
+  <section :style="style" class="flex w-full bg-background-deep transition-all">
     <slot></slot>
   </section>
 </template>

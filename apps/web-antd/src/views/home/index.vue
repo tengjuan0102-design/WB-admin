@@ -3,12 +3,21 @@ defineOptions({ name: 'Home' });
 </script>
 
 <template>
-  <div class="min-h-full bg-background-deep px-6 pt-4 pb-6">
+  <div class="wb-page-shell min-h-full bg-background-deep p-4">
     <div
-      class="flex min-h-[calc(100vh-104px)] w-full items-center justify-center rounded-xl bg-background p-6"
+      class="flex min-h-[calc(100vh-132px)] w-full flex-col items-center justify-center rounded-xl bg-background px-6 py-10 text-center"
     >
-      <p class="text-xl font-medium text-foreground">
+      <img
+        alt="旺宝 AI 服务工作台插画"
+        class="mb-2 w-full max-w-[420px] select-none"
+        draggable="false"
+        src="/images/wanbao-home-welcome.png"
+      />
+      <h1 class="text-xl font-semibold text-foreground">
         欢迎使用旺宝AI服务商后台
+      </h1>
+      <p class="mt-2 text-sm text-muted-foreground">
+        从左侧导航开始，管理设备、下级服务商与账号权限
       </p>
     </div>
   </div>

@@ -3,8 +3,8 @@ defineOptions({ name: 'SubordinateProviders' });
 </script>
 
 <template>
-  <div class="min-h-full bg-background-deep px-6 pt-4 pb-6">
-    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-6">
+  <div class="wb-page-shell min-h-full bg-background-deep p-4">
+    <div class="min-h-[calc(100vh-104px)] w-full rounded-xl bg-background p-5">
       <h1 class="m-0 text-xl font-semibold text-foreground">下级服务商</h1>
       <div
         class="flex min-h-[360px] items-center justify-center text-sm text-muted-foreground"

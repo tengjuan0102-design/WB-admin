@@ -247,6 +247,8 @@ interface NavigationPreferences {
   split: boolean;
   /** 导航菜单风格 */
   styleType: NavigationStyleType;
+  /** 顶部业务菜单是否可见 */
+  topMenuEnable: boolean;
 }
 
 interface SidebarPreferences {
@@ -276,6 +278,8 @@ interface SidebarPreferences {
   hidden: boolean;
   /** 混合侧边栏宽度 */
   mixedWidth: number;
+  /** 是否使用并列式侧边导航 */
+  parallel: boolean;
   /** 侧边栏宽度 */
   width: number;
 }

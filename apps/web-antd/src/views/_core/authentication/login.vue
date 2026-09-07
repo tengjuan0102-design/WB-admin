@@ -88,7 +88,7 @@ async function handleLogin(values: Recordable<any>) {
     :class="{
       '[&_[aria-label=login]]:mt-4': loginMode === 'code',
     }"
-    class="h-[380px]"
+    class="min-h-[380px]"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
     :show-code-login="false"

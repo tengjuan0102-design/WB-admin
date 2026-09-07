@@ -7,6 +7,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('#/views/home/index.vue'),
     meta: {
       affixTab: true,
+      affixTabOrder: -1000,
       icon: 'lucide:house',
       order: -1,
       title: '首页',

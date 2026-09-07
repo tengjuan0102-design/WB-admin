@@ -17,15 +17,23 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
 
   const menus = computed(() => useRootMenus?.value ?? accessStore.accessMenus);
 
-  /** 记录当前顶级菜单下哪个子菜单最后激活 */
-  const defaultSubMap = new Map<string, string>();
   const extraRootMenus = ref<MenuRecordRaw[]>([]);
   const route = useRoute();
   const extraMenus = ref<MenuRecordRaw[]>([]);
   const sidebarExtraVisible = ref<boolean>(false);
   const extraActiveMenu = ref('');
   const parentLevel = computed(() =>
-    preferences.app.layout === 'header-mixed-nav' ? 1 : 0,
+    preferences.app.layout === 'sidebar-mixed-nav' &&
+    !preferences.navigation.topMenuEnable
+      ? 0
+      : ['header-mixed-nav', 'sidebar-mixed-nav'].includes(
+            preferences.app.layout,
+          )
+        ? 1
+        : 0,
+  );
+  const isParallelMenu = computed(
+    () => preferences.app.layout === 'sidebar-mixed-nav',
   );
 
   /**
@@ -45,11 +53,7 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
     if (!hasChildren) {
       await navigation(menu.path);
     } else if (preferences.sidebar.autoActivateChild) {
-      await navigation(
-        defaultSubMap.has(menu.path)
-          ? (defaultSubMap.get(menu.path) as string)
-          : menu.path,
-      );
+      await navigation(menu.path);
     }
   };
 
@@ -65,7 +69,7 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
     extraMenus.value = rootMenu?.children ?? extraRootMenus.value ?? [];
     extraActiveMenu.value = menu.parents?.[parentLevel.value] ?? menu.path;
 
-    if (preferences.sidebar.expandOnHover) {
+    if (preferences.sidebar.expandOnHover || isParallelMenu.value) {
       sidebarExtraVisible.value = extraMenus.value.length > 0;
     }
   };
@@ -74,7 +78,11 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
    * 侧边菜单鼠标移出事件
    */
   const handleSideMouseLeave = () => {
-    if (preferences.sidebar.expandOnHover) {
+    if (isParallelMenu.value && preferences.sidebar.extraCollapse) {
+      sidebarExtraVisible.value = false;
+      return;
+    }
+    if (preferences.sidebar.expandOnHover || isParallelMenu.value) {
       return;
     }
 
@@ -87,7 +95,10 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
   };
 
   const handleMenuMouseEnter = (menu: MenuRecordRaw) => {
-    if (!preferences.sidebar.expandOnHover) {
+    if (
+      (isParallelMenu.value && preferences.sidebar.extraCollapse) ||
+      !preferences.sidebar.expandOnHover
+    ) {
       const { findMenu } = findRootMenuByPath(menus.value, menu.path);
       extraMenus.value = findMenu?.children ?? [];
       extraActiveMenu.value = menu.parents?.[parentLevel.value] ?? menu.path;
@@ -103,18 +114,21 @@ function useExtraMenu(useRootMenus?: ComputedRef<MenuRecordRaw[]>) {
       parentLevel.value,
     );
     extraRootMenus.value = rootMenu?.children ?? [];
-    if (rootMenuPath) defaultSubMap.set(rootMenuPath, currentPath);
     extraActiveMenu.value = rootMenuPath ?? findMenu?.path ?? '';
     extraMenus.value = rootMenu?.children ?? [];
-    if (preferences.sidebar.expandOnHover) {
+    if (preferences.sidebar.expandOnHover || isParallelMenu.value) {
       sidebarExtraVisible.value = extraMenus.value.length > 0;
     }
   }
 
   watch(
-    () => [route.path, preferences.app.layout],
-    ([path]) => {
-      calcExtraMenus(path || '');
+    () => [
+      route.path,
+      preferences.app.layout,
+      preferences.navigation.topMenuEnable,
+    ],
+    () => {
+      calcExtraMenus(route.path || '');
     },
     { immediate: true },
   );

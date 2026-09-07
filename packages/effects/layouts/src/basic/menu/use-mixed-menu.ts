@@ -17,19 +17,30 @@ function useMixedMenu() {
   const rootMenuPath = ref<string>('');
   const mixedRootMenuPath = ref<string>('');
   const mixExtraMenus = ref<MenuRecordRaw[]>([]);
-  /** 记录当前顶级菜单下哪个子菜单最后激活 */
-  const defaultSubMap = new Map<string, string>();
-  const { isMixedNav, isHeaderMixedNav, isMobile } = usePreferences();
+  const { isHeaderMixedNav, isMobile, isMixedNav, isSideMixedNav } =
+    usePreferences();
 
   const needSplit = computed(
     () =>
       !isMobile.value &&
       ((preferences.navigation.split && isMixedNav.value) ||
-        isHeaderMixedNav.value),
+        isHeaderMixedNav.value ||
+        isSideMixedNav.value),
+  );
+
+  // 旺宝的模块父级只承担分组作用，点击后必须进入一个实际子页面。
+  const shouldAutoActivateChild = computed(
+    () =>
+      preferences.sidebar.autoActivateChild ||
+      isHeaderMixedNav.value ||
+      isSideMixedNav.value,
   );
 
   const sidebarVisible = computed(() => {
     const enableSidebar = preferences.sidebar.enable;
+    if (isSideMixedNav.value && !preferences.navigation.topMenuEnable) {
+      return enableSidebar && menus.value.length > 0;
+    }
     if (needSplit.value) {
       return enableSidebar && splitSideMenus.value.length > 0;
     }
@@ -60,6 +71,11 @@ function useMixedMenu() {
   });
 
   const mixHeaderMenus = computed(() => {
+    if (isSideMixedNav.value) {
+      return preferences.navigation.topMenuEnable
+        ? sidebarMenus.value
+        : menus.value;
+    }
     return isHeaderMixedNav.value ? sidebarMenus.value : headerMenus.value;
   });
 
@@ -100,25 +116,8 @@ function useMixedMenu() {
 
     if (_splitSideMenus.length === 0) {
       navigation(key);
-    } else if (rootMenu && preferences.sidebar.autoActivateChild) {
-      navigation(
-        defaultSubMap.has(rootMenu.path)
-          ? (defaultSubMap.get(rootMenu.path) as string)
-          : rootMenu.path,
-      );
-    }
-  };
-
-  /**
-   * 侧边菜单展开事件
-   * @param key 路由路径
-   * @param parentsPath 父级路径
-   */
-  const handleMenuOpen = (key: string, parentsPath: string[]) => {
-    if (parentsPath.length <= 1 && preferences.sidebar.autoActivateChild) {
-      navigation(
-        defaultSubMap.has(key) ? (defaultSubMap.get(key) as string) : key,
-      );
+    } else if (rootMenu && shouldAutoActivateChild.value) {
+      navigation(rootMenu.path);
     }
   };
 
@@ -146,8 +145,6 @@ function useMixedMenu() {
         return;
       }
       calcSideMenus(currentPath);
-      if (rootMenuPath.value)
-        defaultSubMap.set(rootMenuPath.value, currentPath);
     },
     { immediate: true },
   );
@@ -159,7 +156,6 @@ function useMixedMenu() {
 
   return {
     handleMenuSelect,
-    handleMenuOpen,
     headerActive,
     headerMenus,
     sidebarActive,

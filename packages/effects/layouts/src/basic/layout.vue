@@ -21,7 +21,7 @@ import { VbenAdminLayout } from '@vben-core/layout-ui';
 import { VbenBackTop, VbenLogo } from '@vben-core/shadcn-ui';
 import { ELEMENT_ID_LAYOUT_SCROLL } from '@vben-core/shared/constants';
 
-import { Breadcrumb, CheckUpdates, Preferences } from '../widgets';
+import { Breadcrumb, CheckUpdates } from '../widgets';
 import { LayoutContent, LayoutContentSpinner } from './content';
 import { Copyright } from './copyright';
 import { LayoutFooter } from './footer';
@@ -64,7 +64,6 @@ const {
   isHeaderMixedNav,
   isHeaderSidebarNav,
   layout,
-  preferencesButtonPosition,
   sidebarCollapsed,
   theme,
 } = usePreferences();
@@ -90,9 +89,18 @@ const headerTheme = computed(() => {
   return dark ? 'dark' : 'light';
 });
 
+// 并列式导航使用独立固定列宽，不受单列侧边栏宽度偏好影响。
+const effectiveSidebarWidth = computed(() =>
+  isSideMixedNav.value ? 144 : preferences.sidebar.width,
+);
+
+const parallelRailWidth = computed(() =>
+  isSideMixedNav.value && preferences.sidebar.extraCollapse ? 64 : 128,
+);
+
 const logoClass = computed(() => {
   const { collapsedShowTitle } = preferences.sidebar;
-  const classes: string[] = ['ml-1'];
+  const classes: string[] = ['wb-logo-left', 'ml-1'];
 
   if (collapsedShowTitle && sidebarCollapsed.value && !isMixedNav.value) {
     classes.push('mx-auto');
@@ -113,18 +121,27 @@ const logoCollapsed = computed(() => {
   if (isMobile.value && sidebarCollapsed.value) {
     return true;
   }
-  if (isHeaderNav.value || isMixedNav.value || isHeaderSidebarNav.value) {
+  if (
+    isHeaderNav.value ||
+    isHeaderMixedNav.value ||
+    isMixedNav.value ||
+    isHeaderSidebarNav.value ||
+    // 旺宝双列菜单的 Logo 位于全宽顶栏，不跟随侧栏折叠。
+    isSideMixedNav.value
+  ) {
     return false;
   }
-  return (
-    sidebarCollapsed.value || isSideMixedNav.value || isHeaderMixedNav.value
-  );
+  return sidebarCollapsed.value || isSideMixedNav.value;
 });
 
 const showHeaderNav = computed(() => {
   return (
+    preferences.navigation.topMenuEnable &&
     !isMobile.value &&
-    (isHeaderNav.value || isMixedNav.value || isHeaderMixedNav.value)
+    (isHeaderNav.value ||
+      isMixedNav.value ||
+      isHeaderMixedNav.value ||
+      isSideMixedNav.value)
   );
 });
 
@@ -132,6 +149,7 @@ const logoTheme = computed(() => {
   const showLogoInHeader =
     !isSideMode.value ||
     isHeaderSidebarNav.value ||
+    isHeaderMixedNav.value ||
     isMixedNav.value ||
     isMobile.value;
   return showLogoInHeader ? headerTheme.value : sidebarTheme.value;
@@ -148,7 +166,6 @@ const sidebarExtraTitleHeight = computed<number | undefined>(() => {
 
 const {
   handleMenuSelect,
-  handleMenuOpen,
   headerActive,
   headerMenus,
   sidebarActive,
@@ -220,14 +237,18 @@ const route = useRoute();
 
 onMounted(() => {
   autoCollapseMenuByRouteMeta(route);
+  if (preferences.app.layout === 'sidebar-mixed-nav') {
+    updatePreferences({ sidebar: { extraCollapse: false, hidden: false } });
+  }
 });
 
 watch(
   () => preferences.app.layout,
   async (val) => {
-    if (val === 'sidebar-mixed-nav' && preferences.sidebar.hidden) {
+    if (val === 'sidebar-mixed-nav') {
       updatePreferences({
         sidebar: {
+          extraCollapse: false,
           hidden: false,
         },
       });
@@ -265,15 +286,17 @@ const headerSlots = computed(() => {
     :content-padding-left="preferences.app.contentPaddingLeft"
     :content-padding-right="preferences.app.contentPaddingRight"
     :content-padding-top="preferences.app.contentPaddingTop"
+    :breadcrumb-enable="preferences.breadcrumb.enable"
+    :breadcrumb-height="40"
     :footer-enable="preferences.footer.enable"
     :footer-fixed="preferences.footer.fixed"
     :footer-height="preferences.footer.height"
     :header-height="preferences.header.height"
-    :header-hidden="preferences.header.hidden"
-    :header-mode="preferences.header.mode"
+    :header-hidden="false"
+    header-mode="fixed"
     :header-theme="headerTheme"
-    :header-toggle-sidebar-button="preferences.widget.sidebarToggle"
-    :header-visible="preferences.header.enable"
+    :header-toggle-sidebar-button="false"
+    :header-visible="true"
     :is-mobile="preferences.app.isMobile"
     :layout="layout"
     :sidebar-draggable="preferences.sidebar.draggable"
@@ -281,20 +304,21 @@ const headerSlots = computed(() => {
     :sidebar-collapse-show-title="preferences.sidebar.collapsedShowTitle"
     :sidebar-enable="sidebarVisible"
     :sidebar-collapsed-button="preferences.sidebar.collapsedButton"
-    :sidebar-fixed-button="preferences.sidebar.fixedButton"
+    :sidebar-fixed-button="false"
+    :sidebar-gutter-width="isSideMixedNav ? 16 : 0"
     :sidebar-expand-on-hover="preferences.sidebar.expandOnHover"
     :sidebar-extra-collapse="preferences.sidebar.extraCollapse"
     :sidebar-extra-collapsed-width="preferences.sidebar.extraCollapsedWidth"
     :sidebar-extra-title-height="sidebarExtraTitleHeight"
     :sidebar-hidden="preferences.sidebar.hidden"
-    :sidebar-mixed-width="preferences.sidebar.mixedWidth"
+    :sidebar-mixed-width="parallelRailWidth"
     :sidebar-theme="sidebarTheme"
     :sidebar-theme-sub="sidebarThemeSub"
-    :sidebar-width="preferences.sidebar.width"
+    :sidebar-width="effectiveSidebarWidth"
     :side-collapse-width="preferences.sidebar.collapseWidth"
     :sidebar-logo-visible="preferences.logo.enable"
     :tabbar-enable="preferences.tabbar.enable"
-    :tabbar-height="preferences.tabbar.height"
+    :tabbar-height="52"
     :z-index="preferences.app.zIndex"
     @side-mouse-leave="handleSideMouseLeave"
     @toggle-sidebar="toggleSidebar"
@@ -309,8 +333,10 @@ const headerSlots = computed(() => {
         updatePreferences({ sidebar: { expandOnHover: value } })
     "
     @update:sidebar-extra-collapse="
-      (value: boolean) =>
-        updatePreferences({ sidebar: { extraCollapse: value } })
+      (value: boolean) => {
+        updatePreferences({ sidebar: { extraCollapse: value } });
+        sidebarExtraVisible = value ? false : extraMenus.length > 0;
+      }
     "
     @update:sidebar-width="
       (value: number) => updatePreferences({ sidebar: { width: value } })
@@ -341,6 +367,14 @@ const headerSlots = computed(() => {
         </template>
       </VbenLogo>
     </template>
+    <template #breadcrumb>
+      <Breadcrumb
+        :hide-when-only-one="true"
+        :show-home="false"
+        :show-icon="preferences.breadcrumb.showIcon"
+        :type="preferences.breadcrumb.styleType"
+      />
+    </template>
     <!-- 头部区域 -->
     <template #header>
       <LayoutHeader
@@ -350,24 +384,13 @@ const headerSlots = computed(() => {
         @clear-preferences-and-logout="clearPreferencesAndLogout"
         @logout="handleLogout"
       >
-        <template
-          v-if="!showHeaderNav && preferences.breadcrumb.enable"
-          #breadcrumb
-        >
-          <Breadcrumb
-            :hide-when-only-one="preferences.breadcrumb.hideOnlyOne"
-            :show-home="preferences.breadcrumb.showHome"
-            :show-icon="preferences.breadcrumb.showIcon"
-            :type="preferences.breadcrumb.styleType"
-          />
-        </template>
         <template v-if="showHeaderNav" #menu>
           <LayoutMenu
             :default-active="headerActive"
             :menus="wrapperMenus(headerMenus)"
             :rounded="isMenuRounded"
             :theme="headerTheme"
-            class="w-full"
+            class="wb-header-primary-menu w-full"
             mode="horizontal"
             @select="handleMenuSelect"
           />
@@ -378,6 +401,9 @@ const headerSlots = computed(() => {
         <template #notification>
           <slot name="notification"></slot>
         </template>
+        <template v-if="$slots.preferences" #preferences>
+          <slot name="preferences"></slot>
+        </template>
         <template v-for="item in headerSlots" #[item]>
           <slot :name="item"></slot>
         </template>
@@ -386,7 +412,8 @@ const headerSlots = computed(() => {
     <!-- 侧边菜单区域 -->
     <template #menu>
       <LayoutMenu
-        :accordion="preferences.navigation.accordion"
+        :key="sidebarMenus.map((item) => item.path).join('|')"
+        :accordion="false"
         :collapse="preferences.sidebar.collapsed"
         :collapse-show-title="preferences.sidebar.collapsedShowTitle"
         :default-active="sidebarActive"
@@ -394,13 +421,13 @@ const headerSlots = computed(() => {
         :rounded="isMenuRounded"
         :theme="sidebarTheme"
         mode="vertical"
-        @open="handleMenuOpen"
         @select="handleMenuSelect"
       />
     </template>
     <template #mixed-menu>
       <LayoutMixedMenu
         :active-path="extraActiveMenu"
+        :collapse="isSideMixedNav && preferences.sidebar.extraCollapse"
         :menus="wrapperMenus(mixHeaderMenus, false)"
         :rounded="isMenuRounded"
         :theme="sidebarTheme"
@@ -412,8 +439,12 @@ const headerSlots = computed(() => {
     <!-- 侧边额外区域 -->
     <template #side-extra>
       <LayoutExtraMenu
-        :accordion="preferences.navigation.accordion"
-        :collapse="preferences.sidebar.extraCollapse"
+        :accordion="false"
+        :class="{
+          'wb-parallel-secondary-root':
+            isSideMixedNav && !preferences.navigation.topMenuEnable,
+        }"
+        :collapse="isSideMixedNav ? false : preferences.sidebar.extraCollapse"
         :menus="wrapperMenus(extraMenus)"
         :rounded="isMenuRounded"
         :theme="sidebarThemeSub"
@@ -436,7 +467,7 @@ const headerSlots = computed(() => {
     <template #tabbar>
       <LayoutTabbar
         v-if="preferences.tabbar.enable"
-        :show-icon="preferences.tabbar.showIcon"
+        :show-icon="false"
         :theme="theme"
       />
     </template>
@@ -471,12 +502,6 @@ const headerSlots = computed(() => {
         <slot v-if="accessStore.isLockScreen" name="lock-screen"></slot>
       </Transition>
 
-      <template v-if="preferencesButtonPosition.fixed">
-        <Preferences
-          class="fixed top-1/2 right-0 z-100 -translate-y-1/2 transform"
-          @clear-preferences-and-logout="clearPreferencesAndLogout"
-        />
-      </template>
       <VbenBackTop :target="layoutScrollTarget" />
     </template>
   </VbenAdminLayout>

@@ -32,7 +32,11 @@ export function useLayout(props: VbenLayoutProps) {
   const isMixedNav = computed(
     () =>
       currentLayout.value === 'mixed-nav' ||
-      currentLayout.value === 'header-sidebar-nav',
+      // 顶部一级菜单 + 左侧当前模块子菜单：顶栏通栏，侧栏从顶栏下方开始。
+      currentLayout.value === 'header-mixed-nav' ||
+      currentLayout.value === 'header-sidebar-nav' ||
+      // 旺宝的双列菜单也必须位于全宽固定顶栏下方。
+      currentLayout.value === 'sidebar-mixed-nav',
   );
 
   /**
