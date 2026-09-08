@@ -1,18 +1,17 @@
 {
   "name": "@vben/web-antd",
   "version": "5.7.0",
-  "homepage": "https://vben.pro",
-  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "description": "旺宝 AI 后台视觉规范与可交互页面设计模板",
+  "homepage": "https://github.com/tengjuan0102-design/wangbao-ai-provider-admin",
+  "bugs": "https://github.com/tengjuan0102-design/wangbao-ai-provider-admin/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "url": "git+https://github.com/tengjuan0102-design/wangbao-ai-provider-admin.git",
     "directory": "apps/web-antd"
   },
   "license": "MIT",
   "author": {
-    "name": "vben",
-    "email": "ann.vben@gmail.com",
-    "url": "https://github.com/anncwb"
+    "name": "旺宝 AI 设计团队"
   },
   "type": "module",
   "scripts": {

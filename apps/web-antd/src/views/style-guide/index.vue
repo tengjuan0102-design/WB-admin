@@ -67,7 +67,7 @@ const dataSource = [
         <div>
           <h1 class="m-0 text-xl font-semibold text-foreground">基础组件</h1>
           <p class="mt-2 mb-0 text-sm text-muted-foreground">
-            旺宝后台常用基础控件及其默认状态
+            旺宝后台设计模板共用的基础控件及默认状态
           </p>
         </div>
         <Tag color="red">Wangbao UI</Tag>

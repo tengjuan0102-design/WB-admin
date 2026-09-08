@@ -14,10 +14,10 @@ defineOptions({ name: 'Home' });
         src="/images/wanbao-home-welcome.png"
       />
       <h1 class="text-xl font-semibold text-foreground">
-        欢迎使用旺宝AI服务商后台
+        旺宝 AI 后台设计模板
       </h1>
       <p class="mt-2 text-sm text-muted-foreground">
-        从左侧导航开始，管理设备、下级服务商与账号权限
+        共享视觉规范、导航方案与常用页面结构，快速搭建后台产品初版框架
       </p>
     </div>
   </div>
