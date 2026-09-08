@@ -20,11 +20,11 @@
 
 运行项目后，通过左侧“交互视觉”目录查看不同导航与页面模板。可在偏好设置中切换导航布局、深色侧栏和主题配置，确认整体框架后再补充业务内容。
 
-### 快速搭建初版框架
+### 使用 AI 快速搭建
 
-仓库内提供 `$wangbao-admin-scaffold` Skill。输入需求范围、导航层级和品牌主色后，可生成可浏览的导航、路由、代表性页面和 Mock 数据。
+仓库根目录提供通用的 [AI 后台搭建指令](./AI-ADMIN-BUILDER.md)，支持两种模式：从 0→1 搭建完整后台框架，或在现有后台中增加单个业务模块。它不绑定具体 AI 产品，可提供给具备代码仓库读写能力的工具使用。
 
-Skill 位置：`.agents/skills/wangbao-admin-scaffold`
+Codex 用户还可以直接调用 `$wangbao-admin-scaffold` Skill；两种入口遵循相同的需求访谈、确认单和页面生成规则。
 
 ### 研发复用
 
@@ -65,6 +65,7 @@ pnpm -F @vben/web-antd run typecheck
 - 路由与菜单：`apps/web-antd/src/router/routes/modules`
 - 公共页面组件：`apps/web-antd/src/components`
 - 旺宝主题配置：`apps/web-antd/src/wb`
+- 通用 AI 搭建指令：`AI-ADMIN-BUILDER.md`
 - 框架生成 Skill：`.agents/skills/wangbao-admin-scaffold`
 
 ## 二次使用说明

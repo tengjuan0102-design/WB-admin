@@ -7,6 +7,8 @@ description: Build a Wangbao admin application from zero to one, or add a single
 
 Turn a lightweight product brief into a coherent, navigable admin UI inside the current repository. Produce a working first draft that a product manager can review in the browser, not a static requirements document.
 
+When the repository root contains `AI-ADMIN-BUILDER.md`, treat it as the tool-neutral entrypoint and keep this Skill's behavior consistent with it.
+
 ## Choose the working mode
 
 Determine the mode from the request. If it is unclear, ask the user to choose before collecting details:
